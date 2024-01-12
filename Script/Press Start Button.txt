@@ -1,0 +1,200 @@
+# =============================================================================
+# TheoAllen - Press Start Button
+# Version : 1.0
+# Contact : www.rpgmakerid.com (or) http://theolized.blogspot.com
+# (This script documentation is written in informal indonesian language)
+# =============================================================================
+($imported ||= {})[:Theo_PressStart] = true
+# =============================================================================
+# CHANGE LOGS:
+# -----------------------------------------------------------------------------
+# 2013.07.23 - Finished script
+# =============================================================================
+=begin
+ 
+  Perkenalan :
+  Script ini untuk menampilkan tulisan sebelum title command
+ 
+  Cara penggunaan :
+  Pasang dibawah material namun diatas main
+  Edit konfigurasinya kalo perlu
+ 
+  Terms of Use :
+  Credit gw, TheoAllen. Kalo semisal u bisa ngedit2 script gw trus jadi lebih
+  keren, terserah. Ane bebasin. Asal ngga ngeklaim aja. Kalo semisal mau
+  dipake buat komersil, jangan lupa, gw dibagi gratisannya.
+ 
+=end
+# =============================================================================
+# Konfigurasi :
+# =============================================================================
+module THEO
+  module TITLE
+   
+    # Tulisan sebelum command
+    PressStart = "Press to start"
+   
+    # Font Settings.
+    FontName    = ["Jura SemiBold"]
+    FontSize    = 45
+    FontBold    = true
+    FontItalic  = true
+   
+    # Posisi Y text. Makin gede makin kebawah
+    TextPosition = Graphics.height/2 + 120
+   
+    # Keceptan fadein fadeout. Kalo g pengen ada fadenya, tulis 0
+    FadeSpeed = 3
+   
+  end
+end
+# =============================================================================
+# Akhir dari konfigurasi :
+# =============================================================================
+module Math
+ 
+  def self.radian(degree)
+    return (degree.to_f/180) * Math::PI
+  end
+ 
+end
+ 
+class Game_Temp
+  attr_accessor :input_title_command
+ 
+  alias theo_prstart_init initialize
+  def initialize
+    theo_prstart_init
+    @input_title_command = false
+  end
+ 
+end
+ 
+class Press_Start < Sprite
+  attr_accessor :fading
+ 
+  include THEO::TITLE
+ 
+  def initialize(viewport = nil)
+    super(viewport)
+    self.bitmap = Bitmap.new(Graphics.width,Graphics.height)
+    self.opacity = input_mode? ? 0 : (FadeSpeed > 0) ? 128 : 255
+    @fading = !input_mode?
+    @count = 0
+    setup_font
+    draw_press_start
+  end
+ 
+  def input_mode?
+    $game_temp.input_title_command
+  end
+ 
+  def setup_font
+    font = self.bitmap.font
+    font.name = FontName
+    font.size = FontSize
+    font.bold = FontBold
+    font.italic = FontItalic
+  end
+ 
+  def text_size(str)
+    bitmap.text_size(str)
+  end
+ 
+  def draw_press_start
+    bitmap.draw_text(rect_for_text,PressStart,1)
+  end
+ 
+  def rect_for_text
+    text_rect = Rect.new(0,0,self.width,bitmap.font.size)
+    text_rect.y = TextPosition
+    return text_rect
+  end
+ 
+  def update
+    super
+    update_fading
+  end
+ 
+  def update_fading
+    @count += FadeSpeed
+    return unless @fading || FadeSpeed <= 0
+    self.opacity = 128 + (Math.sin(Math.radian(@count))*128)
+  end
+ 
+end
+ 
+class Scene_Title < Scene_Base
+ 
+  alias theo_press_start start
+  def start
+    theo_press_start
+    create_press_start
+    init_press_start
+  end
+ 
+  def create_press_start
+    @start = Press_Start.new(@viewport)
+  end
+ 
+  def init_press_start
+    return if $game_temp.input_title_command
+    @command_window.close
+    @command_window.deactivate
+  end
+ 
+  alias theo_press_start_update update
+  def update
+    theo_press_start_update
+    @start.update
+    update_press_start_input
+  end
+ 
+  def update_press_start_input
+    return if $game_temp.input_title_command
+    if Input.trigger?(:C)
+      Sound.play_ok
+      @start.opacity = 0 if THEO::TITLE::FadeSpeed <= 0
+      until @start.opacity == 0
+        theo_press_start_update
+        @start.update
+      end
+      @start.fading = false
+      open_title_command
+    end
+  end  
+ 
+  def open_title_command
+    @command_window.open
+    @command_window.activate
+    $game_temp.input_title_command = true
+  end
+ 
+  alias theo_prstart_dispose_bg dispose_background
+  def dispose_background
+    theo_prstart_dispose_bg
+    @start.bitmap.dispose
+    @start.dispose
+  end
+ 
+end
+ 
+class Scene_End < Scene_MenuBase
+ 
+  alias theo_prstart_to_title command_to_title
+  def command_to_title
+    theo_prstart_to_title
+    $game_temp.input_title_command = false
+  end
+ 
+end
+ 
+class Scene_Gameover < Scene_Base
+ 
+  alias theo_prstart_goto_title goto_title
+  def goto_title
+    theo_prstart_goto_title
+    $game_temp.input_title_command = false
+  end
+ 
+end

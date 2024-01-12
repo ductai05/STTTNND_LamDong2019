@@ -1,0 +1,23 @@
+#==============================================================================
+# [VXA] SoulPour System - Balloon Sound Effect
+#  Plays a sound effect when a display balloon animation for the player
+# is activated.
+#-------------------------------------------------------------------------
+# VXA Version by SoulPour777  Janrae Mendoza
+# Info Porting Worale's VX to VXA script...
+#==============================================================================
+class Sprite_Character  Sprite_Base
+
+SE_Switch = 1 #switch that activates the sound effect
+SE_Ball = 'Miss' #if you want to use your own audio, it must be on the SE
+#folder
+SE_Vol = 80 # SE volume
+SE_PI = 100 # SE pitch
+
+alias soulpour777_balloonse_start start_balloon
+def start_balloon
+RPGSE.new(SE_Ball,SE_Vol,SE_PI).play if
+!$game_switches[SE_Switch]
+soulpour777_balloonse_start
+end
+end

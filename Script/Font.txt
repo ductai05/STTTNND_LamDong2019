@@ -1,0 +1,2 @@
+Font.default_name = "VL Gothic" 
+Font.default_size = 20

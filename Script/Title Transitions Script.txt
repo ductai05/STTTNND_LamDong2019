@@ -1,0 +1,19 @@
+=begin Title Transitions Script
+By Krish GM
+Make a Image of 544x416 for your logo
+Import into the Graphics/System folder
+Name it LogoA
+=end
+Show_Image = false #asks whether you want to show it or not.
+def show_logo
+sprite = Sprite.new
+Graphics.fadeout(0)
+Audio.se_play("Audio/SE/Wind10",74,74) #you can change the se to anything you want.
+sprite.bitmap = Cache.system('LogoA')
+Graphics.fadein(120) #Set the number to frames for the fadein.
+Graphics.wait(90) #Set how much time it shows the image.
+Graphics.fadeout(120) #Set the number to frames for the fadeout.
+sprite.bitmap.dispose
+sprite.dispose
+end #don't tamper with this
+show_logo unless Show_Image == false

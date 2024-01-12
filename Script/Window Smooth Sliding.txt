@@ -1,0 +1,148 @@
+#-------------------------------------------------------------------------------
+#  [ACE] Sprite & Window Smooth Sliding
+#-------------------------------------------------------------------------------
+#  By Khas Arcthunder - arcthunder.site40.net
+#  Version 1.0 EN
+#  Released on 15022012
+#
+#-------------------------------------------------------------------------------
+#  Terms of Use
+#-------------------------------------------------------------------------------
+# When using any Khas script, you agree with the following terms
+# 1. You must give credit to Khas;
+# 2. All Khas scripts are licensed under a Creative Commons license;
+# 3. All Khas scripts are for non-commercial projects. If you need some script
+#    for your commercial project (I accept requests for this type of project),
+#    send an email to nilokruch@live.com with your request;
+# 4. All Khas scripts are for personal use, you can use or edit for your own
+#    project, but you are not allowed to post any modified version;
+# 5. You can’t give credit to yourself for posting any Khas script;
+# 6. If you want to share a Khas script, don’t post the script or the direct
+#    download link, please redirect the user to arcthunder.site40.net
+# 7. You are not allowed to convert any of Khas scripts to another engine,
+#    such converting a RGSS3 script to RGSS2 or something of that nature.
+#
+# Check all the terms at httparcthunder.site40.netterms
+#
+#-------------------------------------------------------------------------------
+#  Features
+#-------------------------------------------------------------------------------
+# Smooth Sliding for Sprite and Window objects
+# Based on Simple Harmonic Motion
+# Timed movement
+# Sliding check method
+# Separated axis
+#
+#-------------------------------------------------------------------------------
+#  Instructions
+#-------------------------------------------------------------------------------
+# For any object of Sprite or Window class, you can use the following methods
+#
+# object.ssx(target,time)
+# Slides the object to target at the x axis, on given time
+#
+# object.ssy(target,time)
+# Slides the object to target at the y axis, on given time
+#
+# Note that you can use ssx and ssy together.
+#
+# object.update_slide
+# Updates the slide. You must run this if you will slide an object.
+#
+# object.sliding
+# Returns a true or false value (nil if you hadn't slide the object). You can
+# use it to make conditions, such waiting while the object is sliding.
+#
+#-------------------------------------------------------------------------------
+#  Register
+#-------------------------------------------------------------------------------
+$khas_awesome = [] if $khas_awesome.nil
+$khas_awesome  [Smooth Sliding,1.0]
+#-------------------------------------------------------------------------------
+#  Sprite
+#-------------------------------------------------------------------------------
+class Sprite
+  def ssx(tx,time)
+    @ax = self.x
+    @dx = (tx.to_f - @ax)2
+    @phase_x = MathPI
+    @speed_x = @phase_xtime
+    @sliding_x = true
+  end
+  def ssy(ty,time)
+    @ay = self.y
+    @dy = (ty.to_f - @ay)2
+    @phase_y = MathPI
+    @speed_y = @phase_ytime
+    @sliding_y = true
+  end
+  def update_slide
+    unless @phase_x.nil
+      @phase_x -= @speed_x
+      if @phase_x  0
+        self.x = @ax + @dx(Math.cos(@phase_x)+1)
+      else
+        self.x = @ax + @dx2
+        @phase_x = nil
+        @sliding_x = false
+      end
+    end
+    unless @phase_y.nil
+      @phase_y -= @speed_y
+      if @phase_y  0
+        self.y = @ay + @dy(Math.cos(@phase_y)+1)
+      else
+        self.y = @ay + @dy2
+        @phase_y = nil
+        @sliding_y = false
+      end
+    end
+  end
+  def sliding
+    @sliding_x  @sliding_y
+  end
+end
+#-------------------------------------------------------------------------------
+#  Window
+#-------------------------------------------------------------------------------
+class Window
+  def ssx(tx,time)
+    @ax = self.x
+    @dx = (tx.to_f - @ax)2
+    @phase_x = MathPI
+    @speed_x = @phase_xtime
+    @sliding_x = true
+  end
+  def ssy(ty,time)
+    @ay = self.y
+    @dy = (ty.to_f - @ay)2
+    @phase_y = MathPI
+    @speed_y = @phase_ytime
+    @sliding_y = true
+  end
+  def update_slide
+    unless @phase_x.nil
+      @phase_x -= @speed_x
+      if @phase_x  0
+        self.x = @ax + @dx(Math.cos(@phase_x)+1)
+      else
+        self.x = @ax + @dx2
+        @phase_x = nil
+        @sliding_x = false
+      end
+    end
+    unless @phase_y.nil
+      @phase_y -= @speed_y
+      if @phase_y  0
+        self.y = @ay + @dy(Math.cos(@phase_y)+1)
+      else
+        self.y = @ay + @dy2
+        @phase_y = nil
+        @sliding_y = false
+      end
+    end
+  end
+  def sliding
+    @sliding_x  @sliding_y
+  end
+end

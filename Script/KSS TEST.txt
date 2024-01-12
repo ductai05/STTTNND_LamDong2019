@@ -1,0 +1,58 @@
+#-------------------------------------------------------------------------------
+# * [ACE] Sprite & Window Smooth Sliding Test Script
+#-------------------------------------------------------------------------------
+# This is just a test script. You may copy if you want.
+#-------------------------------------------------------------------------------
+ 
+class Scene_Menu < Scene_MenuBase
+  def start
+    # Creates all the stuff (default Scene_MenuBase start)
+    super
+    create_command_window
+    create_gold_window
+    create_status_window
+   
+    # Sets a starting point for each window
+    @gold_window.y = 416
+    @status_window.x = -@status_window.width
+    @command_window.x = 544
+   
+    # Windows, slide to your positions, in 20 frames!
+    @gold_window.ssy(Graphics.height - @gold_window.height,20)
+    @status_window.ssx(@command_window.width,20)
+    @command_window.ssx(0,20)
+  end
+  def update
+    # Update from superclass
+    super
+   
+    # We want an awesome sliding effect, so let's update it!
+    @gold_window.update_slide
+    @status_window.update_slide
+    @command_window.update_slide
+  end
+  def terminate
+    # Done with this scene, so let's slide back!
+    @gold_window.ssy(416,20)
+    @status_window.ssx(-@status_window.width,20)
+    @command_window.ssx(544,20)
+   
+    # We don't update while terminating, so we'll need to do a manual update here
+    loop do
+     
+      # Updating our awesome effect
+      @gold_window.update_slide
+      @status_window.update_slide
+      @command_window.update_slide
+     
+      # Update the graphics
+      Graphics.update
+     
+      # Are they sliding? If not, break!
+      break if not @gold_window.sliding?
+    end
+   
+    # Terminate from superclass
+    super
+  end
+end

@@ -1,0 +1,304 @@
+#==============================================================================
+#
+# ** Title: Save & Load Grid Menu 1.0
+#    Created: April 2019 
+# 
+#------------------------------------------------------------------------------
+#
+# A license is required to buy for commercial or pay-what-you-want games.
+# Users who own a license do not have to give credit for this script.
+# >> License cost: 3$ (Paypal only) 
+# >> E-mail mkr.illust@gmail.com and ask for a license.
+# >> License is per-user: you can use it in any of your games once purchased.
+#
+#------------------------------------------------------------------------------
+#
+# Credit is necessary for users who have not bought a license. 
+# >> In the game's credits or read.me, please credit "TV.Ghost" or "Makorie"
+# >> Additional credits: Sixth, for extra code help
+#
+#------------------------------------------------------------------------------
+# !! Don't remove the license, link or author part of this script header.  
+#------------------------------------------------------------------------------
+#
+# Known issues:
+# 1. All save slots must be on screen at once, as file scrolling is buggy.
+# 2. Positioning for sprites/faces isn't perfect/center-aligned.
+# 
+#==============================================================================
+# Customizable Section Begins Here. 
+#==============================================================================
+
+module RLGridSave
+
+    SAVECOUNT = 8
+    # Options: 2,4,6,8,10
+  
+    HELPWINDOW = :bottom
+    # :top = Help window is on top of screen
+    # :bottom = Help window is on the bottom
+    # :none = Help window is not visible
+    # For SAVECOUNT value of 10, using :none is recommended.
+    
+    SAVEFONT = "Cambria"
+    # Set to SAVEFONT = Font.default_name if you want your default font.
+    
+    FONTLAYOUT = :all
+    # :header - Will only apply custom font for the File Slot text
+    # :all - Will apply custom font for all the save/load menu.
+
+    SAVETEXTITALICS = true
+    # true =  File slot text will be in italics
+    # false = File slot text will not be in italics
+
+    SAVETEXT = "Slot"
+    # Can be changed to whatever
+    
+    SHOWSAVETIME = true
+    # true =  Playtime is shown on screen
+    # false = Playtime is hidden
+    
+    SAVETIMETYPE = :compact
+    # :default = Hour.Minutes.Seconds
+    # :compact = Hour.Minutes
+    
+    SHOWACTORS = :sprites
+    # :sprites = Actor sprites are shown on the save files
+    # :faces = Actor facesets from the database are shown on save files
+    # :none = No actor images are shown on the save files
+    
+    SAVEOPACITY = 255
+    # insert a value for your window opacity 
+    # 0 is fully transparent. 255 is fully opaque.
+  
+    SAVEBACKOPACITY = 128
+    # insert a value for your window border opacity. 
+    # 0 is fully transparent. 255 is fully opaque.
+
+    SAVEBACKGROUND = false
+    # true = Uses a background image. 
+    # false = Doesn't use a background image.
+    
+    SAVEBACKIMAGE = "File_Image"
+    # Image that comes up when you enter the Save scene.
+    # Image must be put in Graphics/System. Put your filename in quotes.
+    
+    LOADBACKIMAGE = "File_Image_2"
+    # Image that comes up when you enter the Load scene.
+    # Image must be put in Graphics/System. Put your filename in quotes.
+
+end
+#==============================================================================
+# Customizable Section Ends Here
+#==============================================================================
+
+module DataManager
+  def self.make_save_header
+    header = {}
+    header[:characters] = $game_party.characters_for_savefile
+    header[:faces] = $game_party.faces_for_savefile
+    header[:playtime_s] = $game_system.playtime_s
+    header
+  end
+end
+
+class Game_Party < Game_Unit
+  def faces_for_savefile
+    battle_members.collect do |actor|
+    [actor.face_name, actor.face_index]
+  end
+end
+end
+
+class Window_SaveFile < Window_Base
+  attr_reader   :selected   # selected
+  alias ghostinitialize initialize
+  def initialize(height, index)
+    super(0, 0, Graphics.width / 2, height)
+    @file_index = index
+      self.back_opacity = RLGridSave::SAVEBACKOPACITY
+      self.opacity = RLGridSave::SAVEOPACITY
+
+    if @file_index % 2 != 0
+      self.x += width
+    end
+    case @file_index
+      when 0, 1
+        self.y = 0
+      when 2, 3
+        self.y += height
+      when 4, 5
+        self.y += (height * 2)
+      when 6, 7
+        self.y += (height * 3)
+      when 8,9
+        self.y += (height * 4)
+      end
+    refresh
+    @selected = false
+  end
+  
+  def refresh
+    contents.clear
+    change_color(normal_color)
+    name = RLGridSave::SAVETEXT + " #{@file_index + 1}"
+    contents.font.name = RLGridSave::SAVEFONT
+    contents.font.italic = RLGridSave::SAVETEXTITALICS
+    draw_text(4, 0, 200, line_height, name)
+    @name_width = text_size(name).width
+    draw_party_faces(0, contents.height / 4) if RLGridSave::SHOWACTORS == :faces
+    if RLGridSave::SAVECOUNT == 10
+    draw_party_characters(20, 60) if RLGridSave::SHOWACTORS == :sprites
+      else
+    draw_party_characters(20, 70) if RLGridSave::SHOWACTORS == :sprites
+    end
+    contents.font.italic = false
+    contents.font.name = Font.default_name if RLGridSave::FONTLAYOUT == :header
+    contents.font.name = RLGridSave::SAVEFONT if RLGridSave::FONTLAYOUT == :all
+    draw_playtime(0, contents.height / contents.height, contents.width - 4, 2) if RLGridSave::SHOWSAVETIME == true
+    self.contents.font.color = (text_color(1))
+  end
+
+  def draw_party_characters(x, y)
+    header = DataManager.load_header(@file_index)
+    return unless header
+    header[:characters].each_with_index do |data, i|
+      draw_character(data[0], data[1], x + i * 48, y)
+    end
+  end
+  
+  def draw_party_faces(x, y)
+    header = DataManager.load_header(@file_index)
+    return unless header
+    header[:faces].each_with_index do |data, i| 
+    case RLGridSave::SAVECOUNT 
+      when 2,4
+        draw_oldface(data[0], data[1], x, y + 0) if i == 0
+        draw_oldface(data[0], data[1], x + (1 * 96), y + 0) if i == 1
+        draw_oldface(data[0], data[1], x, y + (1 * 44)) if i == 2
+        draw_oldface(data[0], data[1], x + (1 * 96),y + (1 * 44)) if i == 3
+      when 6, 8, 10
+        draw_newface(data[0], data[1], x, y + 10) if i == 0
+        draw_newface(data[0], data[1], x + (1 * 96), y + 10) if i == 1
+        draw_newface(data[0], data[1], x, y + (1 * 32)) if i == 2
+        draw_newface(data[0], data[1], x + (1 * 96),y + (1 * 32)) if i == 3
+      end
+  end
+  end
+  
+  def draw_oldface(face_name, face_index, x, y, enabled = true)
+    bitmap = Cache.face(face_name)
+    rect = Rect.new(face_index % 4 * 96, (face_index / 4 * 96)+ 30, 96, 44)
+    contents.blt(x, y, bitmap, rect, enabled ? 255 : translucent_alpha)
+    bitmap.dispose
+  end
+  
+  def draw_newface(face_name, face_index, x, y, enabled = true)
+    bitmap = Cache.face(face_name)
+    rect = Rect.new(face_index % 4 * 96, (face_index / 4 * 96)+ 30, 96, 22)
+    contents.blt(x, y, bitmap, rect, enabled ? 255 : translucent_alpha)
+    bitmap.dispose
+  end
+
+  def draw_playtime(x, y, width, align)
+    header = DataManager.load_header(@file_index)
+    return unless header
+    draw_text(x, y, width, line_height, header[:playtime_s], 2)
+  end
+end
+
+class Scene_File < Scene_MenuBase
+  
+  def start
+    super
+    create_help_window if RLGridSave::HELPWINDOW != :none
+    create_saveimage if RLGridSave::SAVEBACKGROUND == true
+    create_savefile_viewport
+    create_savefile_windows
+    init_selection
+  end
+  
+  def create_saveimage
+    @SaveBG = Sprite.new
+    @SaveBG.bitmap = Cache.system(RLGridSave::SAVEBACKIMAGE) if SceneManager.scene_is?(Scene_Save)
+    @SaveBG.bitmap = Cache.system(RLGridSave::LOADBACKIMAGE) if SceneManager.scene_is?(Scene_Load)
+  end
+  
+  def dispose_saveimage
+    @SaveBG.dispose
+    @SaveBG.bitmap.dispose
+  end
+  
+  def create_help_window
+    @help_window = Window_Help.new(1)
+    @help_window.back_opacity = RLGridSave::SAVEBACKOPACITY 
+    @help_window.opacity = RLGridSave::SAVEOPACITY
+    @help_window.set_text(help_window_text)
+    @help_window.y = Graphics.height - @help_window.height if RLGridSave::HELPWINDOW == :bottom
+  end
+  
+  def create_savefile_windows
+    @savefile_windows = Array.new(item_max) do |i|
+      Window_SaveFile.new(savefile_height, i) 
+    end
+    @savefile_windows.each {|window| window.viewport = @savefile_viewport }
+  end
+  
+  def create_savefile_viewport
+    @savefile_viewport = Viewport.new
+    if RLGridSave::HELPWINDOW == :top #&& RLGridSave::SAVECOUNT != 1 
+      @savefile_viewport.rect.y = @help_window.height
+    else
+      @savefile_viewport.rect.y = 0
+    end
+    if RLGridSave::SAVECOUNT != 1 && RLGridSave::HELPWINDOW != :none
+      @savefile_viewport.rect.height -= @help_window.height 
+    else
+      @savefile_viewport.rect.height = Graphics.height
+    end
+  end
+  
+  def item_max
+    return RLGridSave::SAVECOUNT
+  end
+
+  def visible_max
+    return RLGridSave::SAVECOUNT
+  end
+  
+  def savefile_height
+    @savefile_viewport.rect.height / (visible_max/2)
+  end
+  
+  def update_cursor
+    last_index = @index
+    cursor_down (Input.trigger?(:RIGHT))  if Input.repeat?(:RIGHT)
+    cursor_up   (Input.trigger?(:LEFT))    if Input.repeat?(:LEFT)
+    cursor_pagedown   if Input.trigger?(:R)
+    cursor_pageup     if Input.trigger?(:L)
+    if @index != last_index
+      Sound.play_cursor
+      @savefile_windows[last_index].selected = false
+      @savefile_windows[@index].selected = true
+    end
+  end
+  
+end
+
+class Game_System
+  alias ghostplaytime_s playtime_s
+  def playtime_s
+    hour = playtime / 60 / 60
+    min = playtime / 60 % 60
+    if RLGridSave::SAVETIMETYPE != :default
+      sprintf("%02d:%02d", hour, min)
+    else
+      sec = playtime % 60
+      sprintf("%02d:%02d:%02d", hour, min, sec)
+    end
+  end
+end
+
+#===============================================================================
+# End of Script
+#===============================================================================

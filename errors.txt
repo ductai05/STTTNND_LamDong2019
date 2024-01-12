@@ -1,0 +1,25 @@
+*Error - 2019-03-15 10:33:56 (Friday)
+Exception : Errno::ENOENT
+No such file or directory - Graphics/Tilesets/TileA1
+trace:
+["( Cache )：106:in `initialize'", "( Cache )：106:in `new'", "( Cache )：106:in `normal_bitmap'", "( Cache )：91:in `load_bitmap'", "( Cache )：69:in `tileset'", "( Spriteset_Map )：47:in `block in load_tileset'", "( Spriteset_Map )：46:in `each'", "( Spriteset_Map )：46:in `each_with_index'", "( Spriteset_Map )：46:in `load_tileset'", "( Spriteset_Map )：39:in `create_tilemap'", "( Spriteset_Map )：14:in `initialize'", "( Scene_Map )：128:in `new'", "( Scene_Map )：128:in `create_spriteset'", "( Scene_Map )：17:in `start'", "( Scene_Base )：12:in `main'", "( SceneManager )：22:in `run'", "( WFRGSS共通実行スクリプト )：62:in `block in <main>'", ":1:in `block in rgss_main'", ":1:in `loop'", ":1:in `rgss_main'", "( WFRGSS共通実行スクリプト )：62:in `<main>'", "ruby:in `eval'"]
+*Error - 2019-03-15 10:34:25 (Friday)
+Exception : Errno::ENOENT
+No such file or directory - Graphics/Tilesets/TileA1
+trace:
+["( Cache )：106:in `initialize'", "( Cache )：106:in `new'", "( Cache )：106:in `normal_bitmap'", "( Cache )：91:in `load_bitmap'", "( Cache )：69:in `tileset'", "( Spriteset_Map )：47:in `block in load_tileset'", "( Spriteset_Map )：46:in `each'", "( Spriteset_Map )：46:in `each_with_index'", "( Spriteset_Map )：46:in `load_tileset'", "( Spriteset_Map )：39:in `create_tilemap'", "( Spriteset_Map )：14:in `initialize'", "( Scene_Map )：128:in `new'", "( Scene_Map )：128:in `create_spriteset'", "( Scene_Map )：17:in `start'", "( Scene_Base )：12:in `main'", "( SceneManager )：22:in `run'", "( WFRGSS共通実行スクリプト )：62:in `block in <main>'", ":1:in `block in rgss_main'", ":1:in `loop'", ":1:in `rgss_main'", "( WFRGSS共通実行スクリプト )：62:in `<main>'", "ruby:in `eval'"]
+*Error - 2019-03-15 10:36:53 (Friday)
+Exception : Errno::ENOENT
+No such file or directory - Graphics/Tilesets/TileA1
+trace:
+["( Cache )：106:in `initialize'", "( Cache )：106:in `new'", "( Cache )：106:in `normal_bitmap'", "( Cache )：91:in `load_bitmap'", "( Cache )：69:in `tileset'", "( Spriteset_Map )：47:in `block in load_tileset'", "( Spriteset_Map )：46:in `each'", "( Spriteset_Map )：46:in `each_with_index'", "( Spriteset_Map )：46:in `load_tileset'", "( Spriteset_Map )：39:in `create_tilemap'", "( Spriteset_Map )：14:in `initialize'", "( Scene_Map )：128:in `new'", "( Scene_Map )：128:in `create_spriteset'", "( Scene_Map )：17:in `start'", "( Scene_Base )：12:in `main'", "( SceneManager )：22:in `run'", "( WFRGSS共通実行スクリプト )：62:in `block in <main>'", ":1:in `block in rgss_main'", ":1:in `loop'", ":1:in `rgss_main'", "( WFRGSS共通実行スクリプト )：62:in `<main>'", "ruby:in `eval'"]
+*Error - 2019-03-15 10:38:14 (Friday)
+Exception : Errno::ENOENT
+No such file or directory - Graphics/Tilesets/TileA1
+trace:
+["( Cache )：106:in `initialize'", "( Cache )：106:in `new'", "( Cache )：106:in `normal_bitmap'", "( Cache )：91:in `load_bitmap'", "( Cache )：69:in `tileset'", "( Spriteset_Map )：47:in `block in load_tileset'", "( Spriteset_Map )：46:in `each'", "( Spriteset_Map )：46:in `each_with_index'", "( Spriteset_Map )：46:in `load_tileset'", "( Spriteset_Map )：39:in `create_tilemap'", "( Spriteset_Map )：14:in `initialize'", "( Scene_Map )：128:in `new'", "( Scene_Map )：128:in `create_spriteset'", "( Scene_Map )：17:in `start'", "( Scene_Base )：12:in `main'", "( SceneManager )：22:in `run'", "( WFRGSS共通実行スクリプト )：62:in `block in <main>'", ":1:in `block in rgss_main'", ":1:in `loop'", ":1:in `rgss_main'", "( WFRGSS共通実行スクリプト )：62:in `<main>'", "ruby:in `eval'"]
+*Error - 2019-03-15 10:42:23 (Friday)
+Exception : Errno::ENOENT
+No such file or directory - Graphics/Tilesets/TileA1
+trace:
+["( Cache )：106:in `initialize'", "( Cache )：106:in `new'", "( Cache )：106:in `normal_bitmap'", "( Cache )：91:in `load_bitmap'", "( Cache )：69:in `tileset'", "( Spriteset_Map )：47:in `block in load_tileset'", "( Spriteset_Map )：46:in `each'", "( Spriteset_Map )：46:in `each_with_index'", "( Spriteset_Map )：46:in `load_tileset'", "( Spriteset_Map )：39:in `create_tilemap'", "( Spriteset_Map )：14:in `initialize'", "( Scene_Map )：128:in `new'", "( Scene_Map )：128:in `create_spriteset'", "( Scene_Map )：17:in `start'", "( Scene_Base )：12:in `main'", "( SceneManager )：22:in `run'", "( WFRGSS共通実行スクリプト )：62:in `block in <main>'", ":1:in `block in rgss_main'", ":1:in `loop'", ":1:in `rgss_main'", "( WFRGSS共通実行スクリプト )：62:in `<main>'", "ruby:in `eval'"]
